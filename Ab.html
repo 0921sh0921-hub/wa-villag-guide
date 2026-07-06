@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>دهکده · راهنما</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" />
+  <style>
+    /* ----- reset & base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
+    }
+    body {
+      background: #0c0b10;
+      color: #ece6dc;
+      min-height: 100vh;
+      padding: 18px 14px 30px;
+      transition: background 0.25s, color 0.25s;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpath d='M200 20 L220 80 L280 80 L240 120 L260 180 L200 150 L140 180 L160 120 L120 80 L180 80 Z' fill='rgba(255,215,0,0.02)'/%3E%3Cpath d='M100 100 L130 130 L100 160 L70 130 Z' fill='rgba(64,224,208,0.015)'/%3E%3Cpath d='M300 250 L330 280 L300 310 L270 280 Z' fill='rgba(64,224,208,0.015)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ----- header ----- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+    }
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f5d77b, #d4a017);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.5px;
+    }
+    .header .badge {
+      font-size: 0.65rem;
+      background: rgba(255, 215, 0, 0.08);
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 215, 0, 0.12);
+      color: #bfb09c;
+    }
+
+    /* ----- tabs ----- */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 18px;
+      padding: 6px;
+      border: 1px solid rgba(255, 215, 0, 0.06);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px 4px;
+      border: none;
+      border-radius: 14px;
+      background: transparent;
+      color: #9e9486;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .tab-btn.active {
+      background: rgba(255, 215, 0, 0.1);
+      color: #f5d77b;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.04);
+    }
+    .tab-btn:active { transform: scale(0.95); }
+
+    /* ----- panels ----- */
+    .panel {
+      display: none;
+      animation: fadeUp 0.3s ease;
+    }
+    .panel.active { display: block; }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ----- HELP (search + accordion) ----- */
+    .search-box {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 215, 0, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: #ece6dc;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .search-box input:focus {
+      border-color: #f5d77b;
+      background: rgba(255, 215, 0, 0.04);
+    }
+    .search-box input::placeholder { color: #6b6359; }
+    .search-box .icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b6359;
+      pointer-events: none;
+      font-size: 1.1rem;
+    }
+
+    /* accordion */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .accordion-item {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 215, 0, 0.05);
+      overflow: hidden;
+      transition: border 0.2s;
+    }
+    .accordion-item:hover { border-color: rgba(255, 215, 0, 0.12); }
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #ece6dc;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .accordion-header:active { background: rgba(255, 215, 0, 0.04); }
+    .accordion-header .arrow {
+      transition: transform 0.3s;
+      color: #f5d77b;
+      font-size: 0.8rem;
+    }
+    .accordion-item.open .arrow { transform: rotate(180deg); }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s;
+      padding: 0 18px;
+      color: #d1c8b8;
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+    .accordion-item.open .accordion-content {
+      max-height: 800px;
+      padding: 0 18px 18px;
+    }
+    .accordion-content p { margin-bottom: 6px; }
+    .accordion-content ul { padding-right: 20px; margin: 6px 0; }
+    .accordion-content li { margin-bottom: 4px; }
+    .no-result {
+      padding: 24px 0;
+      text-align: center;
+      color: #6b6359;
+    }
+
+    /* ----- SUPPORT (form + admin panel) ----- */
+    .support-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .support-form label {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #d1c8b8;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .support-form input,
+    .support-form textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 215, 0, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      color: #ece6dc;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .support-form input:focus,
+    .support-form textarea:focus {
+      border-color: #f5d77b;
+      background: rgba(255, 215, 0, 0.04);
+    }
+    .support-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .support-form input::placeholder,
+    .support-form textarea::placeholder {
+      color: #6b6359;
+    }
+    .btn-send {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f5d77b, #d4a017);
+      color: #0c0b10;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 18px rgba(245, 215, 123, 0.15);
+      margin-top: 4px;
+    }
+    .btn-send:active { transform: scale(0.97); }
+    .btn-send:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .status-msg {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: rgba(255, 215, 0, 0.05);
+      border-right: 3px solid #f5d77b;
+      font-size: 0.9rem;
+      color: #d1c8b8;
+      display: none;
+    }
+    .status-msg.show { display: block; }
+
+    /* ----- Admin Panel (inside support) ----- */
+    .admin-panel {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 215, 0, 0.08);
+    }
+    .admin-panel h3 {
+      font-size: 1.1rem;
+      color: #f5d77b;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-msg-card {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.05);
+      transition: background 0.2s;
+    }
+    .admin-msg-card .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.7rem;
+      color: #8f877b;
+      margin-bottom: 6px;
+    }
+    .admin-msg-card .meta span {
+      background: rgba(255, 215, 0, 0.04);
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+    .admin-msg-card .msg-text {
+      font-size: 0.9rem;
+      margin: 6px 0 10px;
+      color: #d4cdc0;
+    }
+    .admin-msg-card .btn-reply {
+      background: rgba(255, 215, 0, 0.06);
+      border: 1px solid rgba(255, 215, 0, 0.12);
+      color: #f5d77b;
+      padding: 5px 18px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .admin-msg-card .btn-reply:active {
+      transform: scale(0.95);
+      background: rgba(255, 215, 0, 0.12);
+    }
+    .admin-reply-area {
+      margin-top: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .admin-reply-area.show { display: flex; }
+    .admin-reply-area textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      color: #ece6dc;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 60px;
+      outline: none;
+    }
+    .admin-reply-area textarea:focus {
+      border-color: #f5d77b;
+    }
+    .admin-reply-area .btn-send-reply {
+      align-self: flex-end;
+      background: #f5d77b;
+      color: #0c0b10;
+      border: none;
+      padding: 6px 24px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .admin-reply-area .btn-send-reply:active {
+      transform: scale(0.95);
+    }
+
+    /* ----- SETTINGS ----- */
+    .settings-card {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 16px;
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 215, 0, 0.05);
+    }
+    .settings-card label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: #d1c8b8;
+    }
+    .theme-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .theme-btn {
+      padding: 8px 18px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
+      color: #bfb09c;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .theme-btn.active {
+      border-color: #f5d77b;
+      background: rgba(245, 215, 123, 0.07);
+      color: #f5d77b;
+    }
+    .theme-btn:active { transform: scale(0.94); }
+
+    /* ----- footer ----- */
+    .footer {
+      text-align: center;
+      margin-top: 44px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 215, 0, 0.05);
+      font-size: 0.75rem;
+      color: #6b6359;
+      letter-spacing: 0.3px;
+    }
+    .footer .heart {
+      color: #c0392b;
+      display: inline-block;
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    /* ----- THEMES (light & turquoise overrides) ----- */
+    body.theme-light {
+      background: #f5efe8;
+      color: #1e1a16;
+    }
+    body.theme-light .header .badge {
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.06);
+      color: #6b5f52;
+    }
+    body.theme-light .tab-btn { color: #6b5f52; }
+    body.theme-light .tab-btn.active {
+      background: rgba(212, 160, 23, 0.08);
+      color: #b8860b;
+    }
+    body.theme-light .search-box input,
+    body.theme-light .support-form input,
+    body.theme-light .support-form textarea,
+    body.theme-light .admin-reply-area textarea {
+      background: rgba(0,0,0,0.03);
+      color: #1e1a16;
+      border-color: rgba(0,0,0,0.06);
+    }
+    body.theme-light .search-box input:focus,
+    body.theme-light .support-form input:focus,
+    body.theme-light .support-form textarea:focus,
+    body.theme-light .admin-reply-area textarea:focus {
+      border-color: #b8860b;
+      background: rgba(0,0,0,0.05);
+    }
+    body.theme-light .accordion-item {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.04);
+    }
+    body.theme-light .accordion-header { color: #1e1a16; }
+    body.theme-light .accordion-content { color: #3d352c; }
+    body.theme-light .settings-card {
+      background: rgba(0,0,0,0.02);
+      border-color: rgba(0,0,0,0.04);
+    }
+    body.theme-light .settings-card label { color: #3d352c; }
+    body.theme-light .support-form label { color: #3d352c; }
+    body.theme-light .status-msg {
+      background: rgba(0,0,0,0.04);
+      border-color: #b8860b;
+      color: #2c241c;
+    }
+    body.theme-light .btn-send {
+      background: linear-gradient(135deg, #d4a017, #b8860b);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(184, 134, 11, 0.2);
+    }
+    body.theme-light .admin-panel h3 { color: #b8860b; }
+    body.theme-light .admin-msg-card .btn-reply {
+      color: #b8860b;
+      border-color: rgba(184, 134, 11, 0.2);
+    }
+    body.theme-light .admin-msg-card .meta span {
+      background: rgba(0,0,0,0.04);
+    }
+    body.theme-light .admin-msg-card .msg-text { color: #2c241c; }
+    body.theme-light .admin-reply-area .btn-send-reply {
+      background: #b8860b;
+      color: #fff;
+    }
+    body.theme-light .footer {
+      border-top-color: rgba(0,0,0,0.05);
+      color: #7a6f62;
+    }
+
+    body.theme-turquoise {
+      background: #0c1a24;
+      color: #d4e6ed;
+    }
+    body.theme-turquoise .header h1 {
+      background: linear-gradient(135deg, #40e0d0, #1fa8a0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    body.theme-turquoise .header .badge {
+      border-color: rgba(64, 224, 208, 0.2);
+      color: #7fc9c9;
+    }
+    body.theme-turquoise .tab-btn.active {
+      background: rgba(64, 224, 208, 0.08);
+      color: #40e0d0;
+    }
+    body.theme-turquoise .search-box input,
+    body.theme-turquoise .support-form input,
+    body.theme-turquoise .support-form textarea,
+    body.theme-turquoise .admin-reply-area textarea {
+      background: rgba(64, 224, 208, 0.04);
+      border-color: rgba(64, 224, 208, 0.08);
+      color: #d4e6ed;
+    }
+    body.theme-turquoise .search-box input:focus,
+    body.theme-turquoise .support-form input:focus,
+    body.theme-turquoise .support-form textarea:focus,
+    body.theme-turquoise .admin-reply-area textarea:focus {
+      border-color: #40e0d0;
+    }
+    body.theme-turquoise .accordion-item {
+      background: rgba(64, 224, 208, 0.02);
+      border-color: rgba(64, 224, 208, 0.06);
+    }
+    body.theme-turquoise .accordion-header .arrow { color: #40e0d0; }
+    body.theme-turquoise .accordion-content { color: #bcd8dd; }
+    body.theme-turquoise .settings-card {
+      background: rgba(64, 224, 208, 0.02);
+      border-color: rgba(64, 224, 208, 0.06);
+    }
+    body.theme-turquoise .settings-card label { color: #bcd8dd; }
+    body.theme-turquoise .support-form label { color: #bcd8dd; }
+    body.theme-turquoise .status-msg {
+      background: rgba(64, 224, 208, 0.05);
+      border-color: #40e0d0;
+      color: #bcd8dd;
+    }
+    body.theme-turquoise .btn-send {
+      background: linear-gradient(135deg, #40e0d0, #1fa8a0);
+      color: #0c1a24;
+      box-shadow: 0 4px 18px rgba(64, 224, 208, 0.15);
+    }
+    body.theme-turquoise .admin-panel h3 { color: #40e0d0; }
+    body.theme-turquoise .admin-msg-card .btn-reply {
+      color: #40e0d0;
+      border-color: rgba(64, 224, 208, 0.2);
+    }
+    body.theme-turquoise .admin-reply-area .btn-send-reply {
+      background: #40e0d0;
+      color: #0c1a24;
+    }
+    body.theme-turquoise .footer {
+      border-top-color: rgba(64, 224, 208, 0.08);
+      color: #5f8a8a;
+    }
+    body.theme-turquoise .theme-btn.active {
+      border-color: #40e0d0;
+      color: #40e0d0;
+      background: rgba(64, 224, 208, 0.06);
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- header -->
+  <header class="header">
+    <h1>🏰 دهکده</h1>
+    <span class="badge">راهنما</span>
+  </header>
+
+  <!-- tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="help">📖 راهنما</button>
+    <button class="tab-btn" data-tab="support">❓ پشتیبانی</button>
+    <button class="tab-btn" data-tab="settings">⚙️ تنظیمات</button>
+  </div>
+
+  <!-- ========== HELP PANEL ========== -->
+  <div id="panel-help" class="panel active">
+    <div class="search-box">
+      <span class="icon">🔍</span>
+      <input type="text" id="searchHelp" placeholder="جستجو در راهنما..." />
+    </div>
+    <div class="accordion" id="helpAccordion"></div>
+  </div>
+
+  <!-- ========== SUPPORT PANEL ========== -->
+  <div id="panel-support" class="panel">
+    <!-- user form -->
+    <form class="support-form" id="supportForm">
+      <div>
+        <label for="supportSubject">📌 موضوع</label>
+        <input type="text" id="supportSubject" placeholder="مثلاً: مشکل در حمله" required />
+      </div>
+      <div>
+        <label for="supportMessage">💬 متن پیام</label>
+        <textarea id="supportMessage" placeholder="لطفاً مشکل یا سوال خود را به طور کامل توضیح دهید..." required></textarea>
+      </div>
+      <button type="submit" class="btn-send" id="sendSupportBtn">📨 ارسال پیام</button>
+      <div class="status-msg" id="supportStatus"></div>
+    </form>
+
+    <!-- Admin Panel (visible only for admins) -->
+    <div class="admin-panel" id="adminPanel" style="display:none;">
+      <h3>📨 پیام‌های کاربران</h3>
+      <div id="adminMessagesContainer"></div>
+    </div>
+  </div>
+
+  <!-- ========== SETTINGS PANEL ========== -->
+  <div id="panel-settings" class="panel">
+    <div class="settings-card">
+      <label>🎨 انتخاب تم</label>
+      <div class="theme-options">
+        <button class="theme-btn active" data-theme="dark">🌙 تیره ایرانی</button>
+        <button class="theme-btn" data-theme="light">☀️ روشن سلطنتی</button>
+        <button class="theme-btn" data-theme="turquoise">💙 آبی فیروزه‌ای</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="footer">
+    ❤️ ساخته شده با عشق توسط SSC Group ❤️
+  </div>
+</div>
+
+<script>
+  (function() {
+    'use strict';
+
+    // ---------- HELP DATA ----------
+    const helpData = [
+      { category: '🌾 مزرعه', content: 'مزرعه منبع اصلی گوشت و چوب است. با ارتقای سطح، سرعت تولید افزایش می‌یابد. برای شروع تولید روی دکمه «شروع تولید» کلیک کنید و پس از تکمیل، برداشت کنید.' },
+      { category: '⛏ معدن', content: 'معدن الماس تولید می‌کند. با استخدام معدن‌چی (هر نفر ۵۰ الماس)، استخراج به مدت ۴۵ دقیقه تا ۴ ساعت طول می‌کشد و الماس استخراج می‌شود.' },
+      { category: '🏰 ساختمان‌ها', content: 'شامل دهکده، مزرعه، معدن و بانک. هر کدام قابلیت ارتقا دارند و منابع بیشتری تولید می‌کنند.' },
+      { category: '💎 منابع', content: 'منابع اصلی: الماس (پول اصلی)، گوشت (برای سرباز)، چوب (برای تله)، سنگ، طلا و نقره. منابع را می‌توان با نرخ بازار به الماس تبدیل کرد.' },
+      { category: '⚔ نبرد', content: 'با سربازان خود به دهکده‌های دیگر حمله کنید. سربازان دشمن، گوشت و چوب غنیمت می‌گیرید. بین حملات ۳۰ ثانیه فاصله الزامی است.' },
+      { category: '🛡 دفاع', content: 'با ساخت تله (هر تله ۳ چوب) از دهکده دفاع کنید. همچنین می‌توانید سپر خریداری کنید که تا مدت مشخصی از حمله جلوگیری می‌کند.' },
+      { category: '👥 قبیله', content: 'با ۱۰۰ الماس قبیله بسازید. حداکثر ۱۰ عضو. قبیله‌ها می‌توانند عمومی یا خصوصی باشند. لیست انتقام برای حملات متقابل.' },
+      { category: '🛒 بازار', content: 'با الماس می‌توانید گوشت و چوب خریداری کنید (هر ۱ الماس = ۷۰۰,۰۰۰ واحد). نرخ‌ها هر ۱۰ دقیقه به‌روز می‌شوند.' },
+      { category: '💰 بانک', content: 'الماس خود را در بانک سرمایه‌گذاری کنید. سود روزانه ۲۰٪. حداکثر موجودی ۳۰۰,۰۰۰ الماس. حداقل واریز/برداشت ۱۰۰ الماس.' },
+      { category: '🎁 کد هدیه', content: 'ادمین‌ها کدهای هدیه با جوایز مختلف (الماس، گوشت، چوب) ایجاد می‌کنند. کاربران می‌توانند کد را وارد کرده و جایزه دریافت کنند.' },
+      { category: '🌦 آب‌وهوا', content: 'هر ۳۰ دقیقه، ۱۰ تا ۲۰ درصد کاربران به‌طور تصادفی دچار طوفان، گرما یا یخبندان می‌شوند و تعدادی سرباز خود را از دست می‌دهند.' },
+      { category: '👑 رتبه‌بندی', content: 'بر اساس جام‌ها، سربازان، قتل‌ها، الماس و اژدهای کشته‌شده رتبه‌بندی می‌شوید. هر حمله پیروز ۲ جام به شما می‌دهد.' },
+      { category: '📜 قوانین بازی', content: '• احترام به همه کاربران • بدون اسپم • هرگونه تقلب منجر به مسدودیت می‌شود • استفاده از کلمات رکیک ممنوع' },
+      { category: '❓ سوالات متداول', content: 'س: چگونه سرباز بسازم؟ ج: با گوشت (هر سرباز ۳ گوشت).\nس: چگونه تله بسازم؟ ج: با چوب (هر تله ۳ چوب).\nس: چگونه سطح دهکده را بالا ببرم؟ ج: با گذشت زمان (هر روز ۱ سطح).' }
+    ];
+
+    // ---------- RENDER ACCORDION ----------
+    function renderAccordion(filter = '') {
+      const container = document.getElementById('helpAccordion');
+      const filtered = helpData.filter(item =>
+        item.category.includes(filter) || item.content.includes(filter)
+      );
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="no-result">🔍 نتیجه‌ای یافت نشد</div>`;
+        return;
+      }
+      let html = '';
+      filtered.forEach(item => {
+        html += `
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <span>${item.category}</span>
+              <span class="arrow">▾</span>
+            </div>
+            <div class="accordion-content">
+              <p>${item.content.replace(/\n/g, '<br>')}</p>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+
+      document.querySelectorAll('.accordion-item').forEach(el => {
+        const header = el.querySelector('.accordion-header');
+        header.addEventListener('click', function(e) {
+          const open = el.classList.contains('open');
+          document.querySelectorAll('.accordion-item').forEach(item => item.classList.remove('open'));
+          if (!open) el.classList.add('open');
+        });
+      });
+    }
+
+    // ---------- SEARCH ----------
+    document.getElementById('searchHelp').addEventListener('input', function(e) {
+      renderAccordion(e.target.value.trim());
+    });
+
+    // ---------- TABS ----------
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const target = this.dataset.tab;
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + target).classList.add('active');
+        if (target === 'support') {
+          checkAdminAndRender();
+        }
+      });
+    });
+
+    // ---------- THEMES ----------
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = 'theme-' + theme;
+      themeBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+      });
+      try { localStorage.setItem('village-theme', theme); } catch(e) {}
+    }
+
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        setTheme(this.dataset.theme);
+      });
+    });
+
+    const saved = (() => { try { return localStorage.getItem('village-theme'); } catch(e) { return null; } })();
+    if (saved && ['dark','light','turquoise'].includes(saved)) {
+      setTheme(saved);
+    } else {
+      setTheme('dark');
+    }
+
+    // ---------- ADMIN CHECK ----------
+    const ADMIN_IDS = ['683075102', '51408354'];
+
+    function isAdmin() {
+      // Check Telegram WebApp user
+      if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
+        const user = Telegram.WebApp.initDataUnsafe.user;
+        if (user && ADMIN_IDS.includes(String(user.id))) {
+          return true;
+        }
+      }
+      // fallback for demo: allow via URL param ?admin=true
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('admin') === 'true') return true;
+      return false;
+    }
+
+    // ---------- ADMIN MESSAGES (in-memory for demo) ----------
+    let adminMessages = [];
+
+    // add a dummy message for demo
+    function seedDummyMessages() {
+      if (adminMessages.length === 0) {
+        adminMessages.push({
+          id: Date.now() + 1,
+          user_id: '98765',
+          user_name: 'شهرام',
+          date: new Date().toLocaleString('fa-IR'),
+          text: 'سلام، من نمی‌توانم وارد بازی شوم. لطفاً راهنمایی کنید.'
+        });
+        adminMessages.push({
+          id: Date.now() + 2,
+          user_id: '12345',
+          user_name: 'مریم',
+          date: new Date().toLocaleString('fa-IR'),
+          text: 'چگونه می‌توانم الماس بیشتری بدست آورم؟'
+        });
+      }
+    }
+
+    function renderAdminMessages() {
+      const container = document.getElementById('adminMessagesContainer');
+      if (!container) return;
+      if (adminMessages.length === 0) {
+        container.innerHTML = '<div style="color:#6b6359;padding:12px;">📭 هنوز پیامی دریافت نشده است.</div>';
+        return;
+      }
+      let html = '';
+      adminMessages.slice().reverse().forEach(msg => {
+        html += `
+          <div class="admin-msg-card" data-id="${msg.id}">
+            <div class="meta">
+              <span>👤 ${msg.user_name}</span>
+              <span>🆔 ${msg.user_id}</span>
+              <span>🕒 ${msg.date}</span>
+            </div>
+            <div class="msg-text">${msg.text}</div>
+            <button class="btn-reply" data-id="${msg.id}">💬 پاسخ</button>
+            <div class="admin-reply-area" id="replyArea_${msg.id}">
+              <textarea placeholder="پاسخ خود را بنویسید..."></textarea>
+              <button class="btn-send-reply" data-id="${msg.id}">ارسال پاسخ</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+
+      // Reply toggle
+      container.querySelectorAll('.btn-reply').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const area = document.getElementById('replyArea_' + id);
+          area.classList.toggle('show');
+        });
+      });
+
+      // Send reply
+      container.querySelectorAll('.btn-send-reply').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const id = this.dataset.id;
+          const area = document.getElementById('replyArea_' + id);
+          const textarea = area.querySelector('textarea');
+          const reply = textarea.value.trim();
+          if (!reply) return;
+
+          // In production: send to backend so bot delivers to user
+          // fetch('/api/admin/reply', { method: 'POST', body: JSON.stringify({ userId, reply }) })
+          console.log(`📤 ارسال پاسخ به کاربر (${id}):`, reply);
+          alert(`✅ پاسخ به کاربر ارسال شد:\n${reply}`);
+
+          textarea.value = '';
+          area.classList.remove('show');
+        });
+      });
+    }
+
+    function checkAdminAndRender() {
+      const panel = document.getElementById('adminPanel');
+      if (isAdmin()) {
+        panel.style.display = 'block';
+        seedDummyMessages();
+        renderAdminMessages();
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+
+    // ---------- SUPPORT FORM (send to backend) ----------
+    const form = document.getElementById('supportForm');
+    const statusMsg = document.getElementById('supportStatus');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const subject = document.getElementById('supportSubject').value.trim();
+      const message = document.getElementById('supportMessage').value.trim();
+
+      if (!subject || !message) {
+        statusMsg.textContent = '⚠️ لطفاً موضوع و متن پیام را کامل کنید.';
+        statusMsg.className = 'status-msg show';
+        return;
+      }
+
+      let userId = 'ناشناس';
+      let userName = 'کاربر';
+      if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
+        const user = Telegram.WebApp.initDataUnsafe.user;
+        if (user) {
+          userId = String(user.id);
+          userName = user.first_name || user.username || 'کاربر';
+        }
+      }
+
+      const payload = {
+        user_id: userId,
+        user_name: userName,
+        subject: subject,
+        message: message,
+        timestamp: new Date().toLocaleString('fa-IR')
+      };
+
+      const sendBtn = document.getElementById('sendSupportBtn');
+      sendBtn.disabled = true;
+      statusMsg.textContent = '⏳ در حال ارسال...';
+      statusMsg.className = 'status-msg show';
+
+      // Simulate API call
+      setTimeout(() => {
+        // If admin is viewing, add this message to their panel (demo)
+        if (isAdmin()) {
+          adminMessages.push({
+            id: Date.now(),
+            user_id: userId,
+            user_name: userName,
+            date: new Date().toLocaleString('fa-IR'),
+            text: `📌 ${subject}\n${message}`
+          });
+          if (document.getElementById('adminPanel').style.display !== 'none') {
+            renderAdminMessages();
+          }
+        }
+
+        statusMsg.textContent = '✅ پیام شما با موفقیت ارسال شد. مدیران در اسرع وقت پاسخ خواهند داد.';
+        statusMsg.className = 'status-msg show';
+        form.reset();
+        sendBtn.disabled = false;
+        console.log('📨 پیام پشتیبانی:', payload);
+      }, 900);
+    });
+
+    // ---------- TELEGRAM WEBAPP ----------
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.expand();
+      Telegram.WebApp.ready();
+    }
+
+    // ---------- INIT ----------
+    renderAccordion();
+    // Check admin on load (if support tab is active by default? no, but we check if user navigates)
+    // But we also check after a small delay in case Telegram user is injected
+    setTimeout(() => {
+      if (document.getElementById('panel-support').classList.contains('active')) {
+        checkAdminAndRender();
+      }
+    }, 300);
+
+    console.log('✅ Mini App با پنل مدیریت داخلی بارگذاری شد.');
+  })();
+</script>
+
+</body>
+</html>
